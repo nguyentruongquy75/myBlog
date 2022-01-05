@@ -30,6 +30,12 @@ export default function Search() {
     setSearchResult([]);
   };
 
+  const clickoutHandler = (e) => {
+    if (containerRef.current && !containerRef.current.contains(e.target)) {
+      setIsDisplayResult(false);
+    }
+  };
+
   // fetch data
   useEffect(() => {
     const fetchData = async () => {
@@ -78,6 +84,15 @@ export default function Search() {
       setIsDisplayResult(true);
     }
   }, [searchValue]);
+
+  // click out
+  useEffect(() => {
+    if (isDisplayResult) {
+      document.addEventListener("mousedown", clickoutHandler);
+
+      return () => document.removeEventListener("mousedown", clickoutHandler);
+    }
+  }, [isDisplayResult]);
 
   return (
     <div ref={containerRef} className={styles["search__container"]}>

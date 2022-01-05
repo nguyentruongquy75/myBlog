@@ -16,6 +16,10 @@
 
 - message [ok]
 
-- 404 page
+- 404 page [ok]
 
-- dark theme
+- dark theme [ok]
+
+- fix search result [ok]
+
+- remember theme [ok]

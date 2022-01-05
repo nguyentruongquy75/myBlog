@@ -7,6 +7,7 @@ import MoonImage from "../../assets/img/moon.png";
 
 import styles from "./ThemeButton.module.css";
 
+let isInitial = true;
 export default function ThemeButton() {
   const context = useContext(themeContext);
 
@@ -21,7 +22,13 @@ export default function ThemeButton() {
 
   // switch css
   useEffect(() => {
+    if (isInitial) {
+      document.body.className = localStorage.getItem("theme") || context.theme;
+      context.setTheme(localStorage.getItem("theme") || context.theme);
+      isInitial = false;
+    }
     document.body.className = context.theme;
+    localStorage.setItem("theme", context.theme);
   }, [context.theme]);
 
   return (
