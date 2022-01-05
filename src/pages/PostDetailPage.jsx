@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { useParams } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -90,70 +91,88 @@ export default function PostDetailPage() {
     window.scrollTo(0, 0);
   }, []);
 
+  console.log(postDetail);
+
   return (
-    <div className={styles["container"]}>
-      {fetchStatus === "loading" && (
-        <article className={styles.article}>
-          <div className={styles["loading__thumbnail"]}>
-            <Skeleton
-              baseColor="var(--color-skeleton)"
-              highlightColor="var(--color-skeleton-animation)"
-              className={styles["thumbnail__skeleton"]}
-            />
-          </div>
-          <div className={styles["loading__title"]}>
-            <Skeleton
-              baseColor="var(--color-skeleton)"
-              highlightColor="var(--color-skeleton-animation)"
-              height={80}
-              className={styles["title__skeleton"]}
-            />
-          </div>
-          <div>
-            <Skeleton
-              baseColor="var(--color-skeleton)"
-              highlightColor="var(--color-skeleton-animation)"
-              className={styles["content__skeleton"]}
-              count={4}
-            />
-          </div>
-        </article>
-      )}
-
+    <>
       {fetchStatus === "finished" && (
-        <article className={styles.article}>
-          <div className={styles["thumbnail"]}>
-            <img src={postDetail.thumbnail.url} alt="" />
-          </div>
-          <h1 className={styles["title"]}>{postDetail.title}</h1>
-          <StyledContent fetchStatus={fetchStatus}>
-            {postDetail.content.markdown}
-          </StyledContent>
-        </article>
+        <Helmet>
+          <title>{postDetail.title}</title>
+          <meta name="description" content={postDetail.desc} />
+          <meta
+            name="keywords"
+            content={`${postDetail.categories[0].name}, ${postDetail.categories[0].link}, lập trình, blog`}
+          />
+          <meta property="og:title" content={postDetail.title} />
+          <meta property="og:description" content={postDetail.desc} />
+          <meta property="og:image" content={postDetail.thumbnail.url} />
+        </Helmet>
       )}
 
-      <aside className={styles.aside}>
+      <div className={styles["container"]}>
         {fetchStatus === "loading" && (
-          <>
-            <div>
+          <article className={styles.article}>
+            <div className={styles["loading__thumbnail"]}>
               <Skeleton
                 baseColor="var(--color-skeleton)"
                 highlightColor="var(--color-skeleton-animation)"
-                className={styles["toc__skeleton"]}
+                className={styles["thumbnail__skeleton"]}
+              />
+            </div>
+            <div className={styles["loading__title"]}>
+              <Skeleton
+                baseColor="var(--color-skeleton)"
+                highlightColor="var(--color-skeleton-animation)"
+                height={80}
+                className={styles["title__skeleton"]}
               />
             </div>
             <div>
               <Skeleton
                 baseColor="var(--color-skeleton)"
                 highlightColor="var(--color-skeleton-animation)"
-                className={styles["toc__skeleton"]}
+                className={styles["content__skeleton"]}
                 count={4}
               />
             </div>
-          </>
+          </article>
         )}
-        {fetchStatus === "finished" && <TableOfContent />}
-      </aside>
-    </div>
+
+        {fetchStatus === "finished" && (
+          <article className={styles.article}>
+            <div className={styles["thumbnail"]}>
+              <img src={postDetail.thumbnail.url} alt="" />
+            </div>
+            <h1 className={styles["title"]}>{postDetail.title}</h1>
+            <StyledContent fetchStatus={fetchStatus}>
+              {postDetail.content.markdown}
+            </StyledContent>
+          </article>
+        )}
+
+        <aside className={styles.aside}>
+          {fetchStatus === "loading" && (
+            <>
+              <div>
+                <Skeleton
+                  baseColor="var(--color-skeleton)"
+                  highlightColor="var(--color-skeleton-animation)"
+                  className={styles["toc__skeleton"]}
+                />
+              </div>
+              <div>
+                <Skeleton
+                  baseColor="var(--color-skeleton)"
+                  highlightColor="var(--color-skeleton-animation)"
+                  className={styles["toc__skeleton"]}
+                  count={4}
+                />
+              </div>
+            </>
+          )}
+          {fetchStatus === "finished" && <TableOfContent />}
+        </aside>
+      </div>
+    </>
   );
 }

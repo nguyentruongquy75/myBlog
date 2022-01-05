@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import Post from "../components/post/Post";
 import { gql } from "@apollo/client";
 import client from "../graphql/config";
@@ -65,28 +66,46 @@ export default function UsefulPage() {
   }, []);
 
   return (
-    <div className={styles.container}>
-      <section>
-        {fetchStatus === "finished" && <h2>Useful</h2>}
+    <>
+      <Helmet>
+        <title>Hữu ích</title>
+        <meta
+          name="description"
+          content={`Tại đây tôi sẽ cung cấp cho bạn những chia sẻ, kiến thức hữu ích về lập trình`}
+        />
+        <meta
+          name="keywords"
+          content={`Hữu ích, chia sẻ, kiến thức, lập trình, blog`}
+        />
+        <meta property="og:title" content={`Hữu ích`} />
+        <meta
+          property="og:description"
+          content={`Tại đây tôi sẽ cung cấp cho bạn những chia sẻ, kiến thức hữu ích về lập trình`}
+        />
+      </Helmet>
+      <div className={styles.container}>
+        <section>
+          {fetchStatus === "finished" && <h2>Useful</h2>}
 
-        {fetchStatus === "finished" && posts.length === 0 && (
-          <div className="message">Chưa có bài viết nào</div>
-        )}
+          {fetchStatus === "finished" && posts.length === 0 && (
+            <div className="message">Chưa có bài viết nào</div>
+          )}
 
-        {fetchStatus === "loading" && (
-          <Skeleton
-            baseColor="var(--color-skeleton)"
-            highlightColor="var(--color-skeleton-animation)"
-            className="loading__title"
-          />
-        )}
-        <div className={styles["post__list"]}>
-          {fetchStatus === "finished" &&
-            posts.map((post) => <Post key={post.id} post={post} />)}
+          {fetchStatus === "loading" && (
+            <Skeleton
+              baseColor="var(--color-skeleton)"
+              highlightColor="var(--color-skeleton-animation)"
+              className="loading__title"
+            />
+          )}
+          <div className={styles["post__list"]}>
+            {fetchStatus === "finished" &&
+              posts.map((post) => <Post key={post.id} post={post} />)}
 
-          {fetchStatus === "loading" && loadingSkeleton}
-        </div>
-      </section>
-    </div>
+            {fetchStatus === "loading" && loadingSkeleton}
+          </div>
+        </section>
+      </div>
+    </>
   );
 }

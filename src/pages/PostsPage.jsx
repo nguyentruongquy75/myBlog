@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { gql } from "@apollo/client";
 import client from "../graphql/config";
 import Skeleton from "react-loading-skeleton";
@@ -96,60 +97,87 @@ export default function PostsPage() {
   }, []);
 
   return (
-    <div className={styles["container"]}>
-      {fetchStatus === "finished" &&
-        categories.map((category) => (
-          <section key={category.id}>
-            <h2 className="section__heading">
-              <span>{category.name}</span>
-              {sliderOptions.slidesToShow < category.posts.length && (
-                <Link
-                  className={styles["section__expand"]}
-                  to={`/posts/${category.link}`}
-                >
-                  Xem tất cả <i className="fas fa-angle-right"></i>
-                </Link>
+    <>
+      <Helmet>
+        <title>Danh sách các thể loại bài viết tại Bug Creator</title>
+        <meta
+          name="description"
+          content={`Tại Bug Creator có các thể loại nổi bật như ${categories
+            .map((cate) => cate.name)
+            .join(",")}`}
+        />
+        <meta
+          name="keywords"
+          content={`Thể loại, ${categories
+            .map((cate) => cate.name)
+            .join(",")}, lập trình, blog`}
+        />
+        <meta
+          property="og:title"
+          content={`Danh sách các thể loại bài viết tại Bug Creator`}
+        />
+        <meta
+          property="og:description"
+          content={`Tại Bug Creator có các thể loại nổi bật như ${categories
+            .map((cate) => cate.name)
+            .join(",")}`}
+        />
+      </Helmet>
+      <div className={styles["container"]}>
+        {fetchStatus === "finished" &&
+          categories.map((category) => (
+            <section key={category.id}>
+              <h2 className="section__heading">
+                <span>{category.name}</span>
+                {sliderOptions.slidesToShow < category.posts.length && (
+                  <Link
+                    className={styles["section__expand"]}
+                    to={`/posts/${category.link}`}
+                  >
+                    Xem tất cả <i className="fas fa-angle-right"></i>
+                  </Link>
+                )}
+              </h2>
+              {category.posts.length === 0 && (
+                <div className="message">Chưa có bài viết nào</div>
               )}
-            </h2>
-            {category.posts.length === 0 && (
-              <div className="message">Chưa có bài viết nào</div>
-            )}
-            <div className={styles["section__list"]}>
-              <Slider {...sliderOptions}>
-                {category.posts.map((post) => (
-                  <div key={post.id}>
-                    <Post post={post} />
-                  </div>
-                ))}
-              </Slider>
-            </div>
-          </section>
-        ))}
+              <div className={styles["section__list"]}>
+                <Slider {...sliderOptions}>
+                  {category.posts.map((post) => (
+                    <div key={post.id}>
+                      <Post post={post} />
+                    </div>
+                  ))}
+                </Slider>
+              </div>
+            </section>
+          ))}
 
-      {fetchStatus === "loading" && (
-        <>
-          <section>
-            <Skeleton
-              baseColor="var(--color-skeleton)"
-              className="loading__title"
-            />
+        {fetchStatus === "loading" && (
+          <>
+            <section>
+              <Skeleton
+                baseColor="var(--color-skeleton)"
+                className="loading__title"
+              />
 
-            <div className={styles["section__list"]}>
-              <Slider {...sliderOptions}>{loadingSkeleton}</Slider>
-            </div>
-          </section>
-          <section>
-            <Skeleton
-              baseColor="var(--color-skeleton)"
-              className="loading__title"
-            />
+              <div className={styles["section__list"]}>
+                <Slider {...sliderOptions}>{loadingSkeleton}</Slider>
+              </div>
+            </section>
+            <section>
+              <Skeleton
+                baseColor="var(--color-skeleton)"
+                className="loading__title"
+              />
 
-            <div className={styles["section__list"]}>
-              <Slider {...sliderOptions}>{loadingSkeleton}</Slider>
-            </div>
-          </section>
-        </>
-      )}
-    </div>
+              <div className={styles["section__list"]}>
+                <Slider {...sliderOptions}>{loadingSkeleton}</Slider>
+              </div>
+            </section>
+          </>
+        )}
+      </div>
+    </>
   );
 }

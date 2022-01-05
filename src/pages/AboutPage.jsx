@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import StyledContent from "../components/styledContent/StyledContent";
 import { gql } from "@apollo/client";
 import client from "../graphql/config";
@@ -53,17 +54,29 @@ export default function AboutPage() {
   }, []);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <article>
-          {fetchStatus === "finished" && (
-            <StyledContent>{about.content.markdown}</StyledContent>
-          )}
-        </article>
+    <>
+      <Helmet>
+        <title>Giới thiệu</title>
+        <meta name="description" content="Đôi chút về Bug Creator" />
+        <meta
+          name="keywords"
+          content="Bug Creator, Giới thiệu,Bug Creator Blog,Blog"
+        />
+        <meta property="og:title" content={`Giới thiệu`} />
+        <meta property="og:description" content={`Đôi chút về Bug Creator`} />
+      </Helmet>
+      <div className={styles.container}>
+        <div className={styles.content}>
+          <article>
+            {fetchStatus === "finished" && (
+              <StyledContent>{about.content.markdown}</StyledContent>
+            )}
+          </article>
+        </div>
+        <aside className={styles.aside}>
+          {fetchStatus === "finished" && <TableOfContent />}
+        </aside>
       </div>
-      <aside className={styles.aside}>
-        {fetchStatus === "finished" && <TableOfContent />}
-      </aside>
-    </div>
+    </>
   );
 }
